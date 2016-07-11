@@ -6,26 +6,42 @@ package com.cs545.ecom.domain;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Solomon Kassahun
  *
  */
+
 public class Order {
 	private String orderId;
 	private LocalDate orderDate;
 	private User user;
 	private BigDecimal orderPrice;
-	private List<OrderItem> orderItems;
+	private Map<String, OrderItem> orderItems;
 	
 	/**
 	 * Default no-arg constructor
 	 */
 	public Order() {
 		super();
-		orderItems = new ArrayList<OrderItem>();
+		orderItems = new HashMap<String, OrderItem>();
+		orderPrice = new BigDecimal(0);
 	}
+	
+	
+
+	/**
+	 * @param orderId
+	 */
+	public Order(String orderId) {
+		this();
+		this.orderId = orderId;
+	}
+
+
 
 	/**
 	 * @return the orderId
@@ -86,16 +102,54 @@ public class Order {
 	/**
 	 * @return the orderItems
 	 */
-	public List<OrderItem> getOrderItems() {
+	public Map<String, OrderItem> getOrderItems() {
 		return orderItems;
 	}
 
 	/**
 	 * @param orderItems the orderItems to set
 	 */
-	public void setOrderItems(List<OrderItem> orderItems) {
+	public void setOrderItems(Map<String, OrderItem> orderItems) {
 		this.orderItems = orderItems;
 	}
+	
+		
+	/**
+	 * @param item -- order item to add to map of order items
+	 */
+	public void addOrderItem(OrderItem item) {
+        String productId = item.getProduct().getProductId();
+
+        if (orderItems.containsKey(productId)) {
+            OrderItem existingCartItem = orderItems.get(productId);
+            existingCartItem.setQuantity(existingCartItem.getQuantity()
+                    + item.getQuantity());
+        }else{
+            orderItems.put(productId, item);
+        }
+        updateOrderPrice();
+    }
+    
+    /**
+     * @param item order item to remove from the order items map
+     */
+    public void removeOrderItem(OrderItem item){
+        String productId = item.getProduct().getProductId();
+        orderItems.remove(productId);
+        updateOrderPrice();
+    }
+    
+    /**
+     * Update the order price. Called after changes have been made to the order
+     */
+    public void updateOrderPrice(){
+        orderPrice = new BigDecimal(0);
+        
+        for(OrderItem item: orderItems.values()){
+        	orderPrice = orderPrice.add(item.getTotalPrice());
+        }
+    }
+
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
@@ -126,9 +180,7 @@ public class Order {
 		} else if (!orderId.equals(other.orderId))
 			return false;
 		return true;
-	}
-	
-	
+	}	
 	
 
 }

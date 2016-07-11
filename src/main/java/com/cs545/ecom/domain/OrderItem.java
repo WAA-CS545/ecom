@@ -13,7 +13,7 @@ public class OrderItem {
 	private Product product;
 	private long quantity;
 	private BigDecimal totalPrice;
-	private Order order;
+	
 	
 	public OrderItem() {
 		super();
@@ -42,16 +42,6 @@ public class OrderItem {
 	public void setTotalPrice(BigDecimal totalPrice) {
 		this.totalPrice = totalPrice;
 	}
-
-	public Order getOrder() {
-		return order;
-	}
-
-	public void setOrder(Order order) {
-		this.order = order;
-	}
-	
-	
 	
 	
 

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.cs545.ecom.domain;
+package com.cs545.ecom.model;
 
 import java.math.BigDecimal;
 
